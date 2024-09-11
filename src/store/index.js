@@ -1,49 +1,79 @@
-// src/store/index.js
 import { createStore } from 'vuex';
 
 export default createStore({
   state: {
-    user: null, // State to hold the current logged-in user
+    users: JSON.parse(localStorage.getItem('users')) || [],
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    successMessage: '',
   },
   mutations: {
     SET_USER(state, user) {
-      state.user = user; // Mutate the user state when a user logs in or registers
+      state.user = user;
     },
     LOGOUT(state) {
-      state.user = null; // Clear the user state when the user logs out
+      state.user = null;
+    },
+    SET_SUCCESS_MESSAGE(state, message) {
+      state.successMessage = message;
+    },
+    ADD_USER(state, user) {
+      state.users.push(user);
+      localStorage.setItem('users', JSON.stringify(state.users));
+    },
+    DELETE_USER(state, email) {
+      state.users = state.users.filter(user => user.email !== email);
+      localStorage.setItem('users', JSON.stringify(state.users));
+    },
+    UPDATE_USER(state, updatedUser) {
+      const index = state.users.findIndex(user => user.email === updatedUser.email);
+      if (index !== -1) {
+        state.users.splice(index, 1, updatedUser);
+        localStorage.setItem('users', JSON.stringify(state.users));
+      }
+    },
+    SET_USERS(state, users) {
+      state.users = users;
+      localStorage.setItem('users', JSON.stringify(users));
     }
   },
   actions: {
     register({ commit }, user) {
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-      users.push(user); // Add the new user to the local storage
-      localStorage.setItem('users', JSON.stringify(users));
-      commit('SET_USER', user); // Set the current user state
-      localStorage.setItem('user', JSON.stringify(user)); // Persist the logged-in user in localStorage
+      commit('ADD_USER', user);
+      commit('SET_USER', user);
+      localStorage.setItem('user', JSON.stringify(user));
+      commit('SET_SUCCESS_MESSAGE', 'Registration successful!');
     },
-    login({ commit }, credentials) {
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-      let user = users.find(u => u.username === credentials.username && u.password === credentials.password);
+    login({ commit, state }, credentials) {
+      const user = state.users.find(u => u.email === credentials.email && u.password === credentials.password);
       if (user) {
-        commit('SET_USER', user); // Set the current user state if login is successful
+        commit('SET_USER', user);
         localStorage.setItem('user', JSON.stringify(user));
+        commit('SET_SUCCESS_MESSAGE', 'Login successful!');
       } else {
-        throw new Error('Invalid credentials'); // Throw an error if login fails
+        throw new Error('Invalid credentials');
       }
     },
     logout({ commit }) {
-      commit('LOGOUT'); // Clear the user state on logout
-      localStorage.removeItem('user'); // Remove user data from localStorage
+      commit('LOGOUT');
+      localStorage.removeItem('user');
     },
     loadUserFromStorage({ commit }) {
-      let user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
-        commit('SET_USER', user); // Load the user from localStorage if they are still logged in
+        commit('SET_USER', user);
       }
-    }
+    },
+    deleteUser({ commit }, email) {
+      commit('DELETE_USER', email);
+    },
+    updateUser({ commit }, updatedUser) {
+      commit('UPDATE_USER', updatedUser);
+    },
   },
   getters: {
-    isLoggedIn: state => !!state.user, // Return true if a user is logged in
-    userRole: state => (state.user ? state.user.role : null), // Get the role of the current user
+    isLoggedIn: state => !!state.user,
+    userRole: state => (state.user ? state.user.role : null),
+    successMessage: state => state.successMessage,
+    users: state => state.users,
   }
 });

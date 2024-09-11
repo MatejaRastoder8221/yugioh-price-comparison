@@ -2,7 +2,7 @@
     <div class="card-result">
       <img :src="imageUrl" :alt="card.name" class="card-image" />
       <div class="card-details">
-        <h2>{{ card.name }}</h2>
+        <router-link :to="`/card/${card.id}`"><h2>{{ card.name }}</h2></router-link>
         <p class="card-type">
           [{{ humanReadableCardType }}]
           <span v-if="isMonster">- ATK/{{ card.atk }} DEF/{{ card.def }}</span>

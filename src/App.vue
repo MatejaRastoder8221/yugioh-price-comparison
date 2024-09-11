@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { useStore } from 'vuex';  // Corrected import
+import { useStore } from 'vuex';
 import NavBar from './components/NavBar.vue';
 
 export default {
@@ -15,7 +15,7 @@ export default {
   },
   setup() {
     const store = useStore();
-    store.dispatch('loadUserFromStorage');
+    store.dispatch('loadUserFromStorage'); // Load user from localStorage if available
   },
 };
 </script>

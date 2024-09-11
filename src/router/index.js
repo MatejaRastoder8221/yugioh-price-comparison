@@ -6,12 +6,14 @@ import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import AdminPage from '../views/AdminPage.vue';
 import { useStore } from 'vuex';
+import SingleCardPage from '../views/SingleCardPage.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/login', name: 'Login', component: Login },
   { path: '/register', name: 'Register', component: Register },
   { path: '/search', name: 'Search', component: Search },
+  { path: '/card/:id', name: 'SingleCard', component: SingleCardPage },
   {
     path: '/admin',
     name: 'Admin',

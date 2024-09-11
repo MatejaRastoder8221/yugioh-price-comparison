@@ -1,50 +1,77 @@
 <template>
-    <nav>
-      <ul>
-        <router-link to="/" exact-active-class="active-link"><li>Home</li></router-link>
-        <router-link to="/search" exact-active-class="active-link"><li>Search</li></router-link>
-        <router-link to="/login" exact-active-class="active-link"><li>Login</li></router-link>
-        <router-link to="/register" exact-active-class="active-link"><li>Register</li></router-link>
-        <router-link to="/admin" exact-active-class="active-link"><li>Admin Panel</li></router-link>
-      </ul>
-    </nav>
-  </template>
-  
-  <script>
-  export default {
-  };
-  </script>
-  
-  <style scoped>
-  nav {
-    background-color: #333;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  ul {
-    list-style: none;
-    display: flex;
-    justify-content: left;
-    margin: 0;
-    padding: 0 0 0 10vw;
-  }
-  li {
-    margin: 0;
-    padding: 2vh;
-  }
-  li:hover{
-    background-color: #1c1c1c;
-  }
-  a {
-    color: white;
-    text-decoration: none;
-  }
-  a.router-link-exact-active {
-    font-weight: bold;
-    /* border-bottom: 2px solid #fff; */
-  }
-  .active-link li {
-  background-color: #4e4e4e; /* Change this to your desired active background color */
-  font-weight: bold;
+  <nav class="navbar">
+    <ul class="navbar-list">
+      <li><router-link to="/">Home</router-link></li>
+      <li><router-link to="/search">Search</router-link></li>
+      <li v-if="isAdmin"><router-link to="/admin">Admin</router-link></li>
+      <li v-if="!isLoggedIn"><router-link to="/login">Login</router-link></li>
+      <li v-if="!isLoggedIn"><router-link to="/register">Register</router-link></li>
+      <li v-if="isLoggedIn">
+        <button @click="logout">Logout</button>
+      </li>
+    </ul>
+  </nav>
+</template>
+
+<script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+export default {
+  setup() {
+    const store = useStore();
+
+    const isLoggedIn = computed(() => store.getters.isLoggedIn);
+    const isAdmin = computed(() => store.getters.userRole === 'admin');
+
+    const logout = () => {
+      store.dispatch('logout');
+      store.commit('SET_SUCCESS_MESSAGE', 'Logout successful!');
+      store.dispatch('loadUserFromStorage');
+    };
+
+    return {
+      isLoggedIn,
+      isAdmin,
+      logout,
+    };
+  },
+};
+</script>
+
+<style scoped>
+.navbar {
+  background-color: #1e1e1e;
+  padding: 1em;
 }
-  </style>
-  
+
+.navbar-list {
+  list-style: none;
+  display: flex;
+  gap: 1em;
+}
+
+.navbar-list li {
+  margin: 0;
+}
+
+.navbar-list a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-list a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  text-decoration: underline;
+}
+</style>
