@@ -22,7 +22,7 @@ export default {
       try {
         const response = await axios.get(`https://api.cardtrader.com/api/v2/marketplace/products/${id}`, {
           headers: {
-            'Authorization': `Bearer YOUR_JWT_TOKEN`,
+            'Authorization': `Bearer ovde_treba_token_mozda?`,
           },
         });
         card.value = response.data;

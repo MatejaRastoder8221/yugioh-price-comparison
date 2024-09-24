@@ -1,6 +1,6 @@
 <template>
   <div class="container" id="welcomeText">
-    <h1>Welcome to the Yu-Gi-Oh encyclopedia by Marabunta</h1>
+    <h1>Welcome to the Yu-Gi-Oh encyclopedia by Mateja Rastoder</h1>
     <router-link to="/search">Search for Cards</router-link>
   </div>
   <div class="home-container">
@@ -21,12 +21,12 @@ export default {
     onMounted(() => {
       successMessage.value = store.getters.successMessage;
 
-      if (successMessage.value) {
-        // Clear the success message after 3 seconds
-        setTimeout(() => {
-          store.commit('clearSuccessMessage');
-        }, 3000);
-      }
+      // if (successMessage.value) {
+      //   // Clear the success message after 3 seconds
+      //   setTimeout(() => {
+      //     store.commit('clearSuccessMessage');
+      //   }, 3000);
+      // }
     });
 
     return {
